@@ -1,8 +1,15 @@
 import React from "react";
 
-const EmailCard = () => {
+interface EmailCardProps {
+  onClick: () => void;
+}
+
+const EmailCard: React.FC<EmailCardProps> = ({ onClick }) => {
   return (
-    <div className="rounded-lg border bg-card shadow-sm w-full text-sm p-8">
+    <div
+      onClick={onClick}
+      className="rounded-lg border bg-card shadow-sm w-full text-sm p-8"
+    >
       <div className="flex justify-between items-center font-semibold">
         <p className="text-base">Sanjay M</p>
         <p className="px-2.5 py-0.5 rounded-full text-white bg-green-500">
@@ -10,7 +17,7 @@ const EmailCard = () => {
         </p>
       </div>
 
-      <p className="pt-6 line-clamp-2">
+      <p className="pt-6 line-clamp-3 text-muted-foreground">
         Hi Emily, Thanks for your order. We are pleased to inform you that your
         order has been shipped. Lorem ipsum dolor sit amet, consectetur
         adipiscing elit. Aliquam auctor mattis tristique. Orci varius natoque

@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -10,13 +12,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Input } from "@/components/ui/input";
 import EmailCard from "@/components/email-card";
+import EmailDrawer from "@/components/email-drawer";
 
-import { LogOut, Mail } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 const EmailDashboard = () => {
   const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleEmailCardClick = () => {
+    setIsDrawerOpen(true);
+  };
 
   return (
     <div className="container max-w-4xl my-10 ">
@@ -36,15 +43,14 @@ const EmailDashboard = () => {
           </div>
         </div>
 
-        <Button className="hidden md:flex" variant="destructive">
+        <Button className="hidden md:flex" variant="outline">
           <LogOut className="mr-2 h-4 w-4" /> Logout
         </Button>
 
-        <Button className="flex md:hidden " variant="destructive" size="icon">
+        <Button className="flex md:hidden " variant="outline" size="icon">
           <LogOut className="h-4 w-4" />
         </Button>
       </div>
-
       <div className="flex item-center justify-between mt-10">
         <Select>
           <SelectTrigger className="w-[180px]">
@@ -62,9 +68,14 @@ const EmailDashboard = () => {
         <Button variant="secondary">Classify</Button>
       </div>
 
-      <div className="mt-10 flex items-center justify-center">
-        <EmailCard></EmailCard>
+      <div className="mt-10 flex flex-col gap-5 items-center justify-center">
+        <EmailCard onClick={handleEmailCardClick} />
       </div>
+
+      <EmailDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
     </div>
   );
 };
