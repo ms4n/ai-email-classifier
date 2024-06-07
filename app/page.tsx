@@ -19,10 +19,10 @@ const Home = () => {
   };
 
   return (
-    <div className="container max-w-3xl">
+    <div className="container max-w-4xl">
       <nav className="pt-10 text-xl">AI Email Classifier</nav>
-      <div className="flex flex-col items-center h-full my-72 text-4xl gap-10">
-        <div className="w-1/2">
+      <div className="flex flex-col items-center h-full mt-48 text-4xl gap-10">
+        <div className="w-full md:w-1/2 ">
           <Input
             className={` ${
               inputError
