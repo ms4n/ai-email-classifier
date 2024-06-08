@@ -25,6 +25,13 @@ const EmailDashboard = () => {
 
   const router = useRouter();
 
+  const emailData = {
+    senderName: "Lee Rob",
+    emailLabel: "Important",
+    emailContent:
+      "Thanks for your order. We are pleased to inform you that your order has been shipped. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam auctor mattis tristique. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla malesuada tortor vitae justo condimentum auctor. Donec venenatis arcu vitae tellus finibus porta. Praesent volutpat mattis euismod. Donec elit lectus, vestibulum sed metus id, laoreet pharetra mi. Duis enim mauris, sollicitudin nec erat ac, aliquam viverra mi. Proin pretium maximus imperdiet. Thanks for your order. We are pleased inform you that your order has been shipped.",
+  };
+
   const handleEmailCardClick = () => {
     setIsDrawerOpen(true);
   };
@@ -103,12 +110,13 @@ const EmailDashboard = () => {
         </div>
 
         <div className="mt-10 flex flex-col gap-5 items-center justify-center">
-          <EmailCard onClick={handleEmailCardClick} />
+          <EmailCard emailData={emailData} onClick={handleEmailCardClick} />
         </div>
 
         <EmailDrawer
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
+          emailData={emailData}
         />
       </div>
     </ProtectedRoute>

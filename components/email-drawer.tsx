@@ -13,9 +13,19 @@ import {
 interface EmailDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  emailData: {
+    senderName: string;
+    emailLabel: string;
+    emailContent: string;
+  };
 }
 
-const EmailDrawer: React.FC<EmailDrawerProps> = ({ isOpen, onClose }) => {
+const EmailDrawer: React.FC<EmailDrawerProps> = ({
+  isOpen,
+  onClose,
+  emailData,
+}) => {
+  const { senderName, emailLabel, emailContent } = emailData;
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -43,45 +53,14 @@ const EmailDrawer: React.FC<EmailDrawerProps> = ({ isOpen, onClose }) => {
           <SheetHeader>
             <SheetTitle>
               <div className="flex justify-between items-center font-semibold">
-                <p className="text-base">Sanjay M</p>
+                <p className="text-base">{senderName}</p>
                 <p className="px-2.5 py-0.5 rounded-full text-white bg-green-500 text-sm">
-                  Important
+                  {emailLabel}
                 </p>
               </div>
             </SheetTitle>
             <SheetDescription>
-              <p className="mb-4">Hi Emily,</p>
-              <p className="mb-4">
-                Thanks for your order. We are pleased to inform you that your
-                order has been shipped. Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Aliquam auctor mattis tristique. Orci varius
-                natoque penatibus et magnis dis parturient montes, nascetur
-                ridiculus mus. Nulla malesuada tortor vitae justo condimentum
-                auctor. Donec venenatis arcu vitae tellus finibus porta.
-                Praesent volutpat mattis euismod. Donec elit lectus, vestibulum
-                sed metus id, laoreet pharetra mi. Duis enim mauris,
-                sollicitudin nec erat ac, aliquam viverra mi. Proin pretium
-                maximus imperdiet. Thanks for your order. We are pleased to
-                inform you that your order has been shipped. Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit. Aliquam auctor mattis
-                tristique. Orci varius natoque penatibus et magnis dis
-                parturient montes, nascetur ridiculus mus. Nulla malesuada
-                tortor vitae justo condimentum auctor. Donec venenatis arcu
-                vitae tellus finibus porta. Praesent volutpat mattis euismod.
-                Donec elit lectus, vestibulum sed metus id, laoreet pharetra mi.
-                Duis enim mauris, sollicitudin nec erat ac, aliquam viverra mi.
-                Proin pretium maximus imperdiet.
-              </p>
-              <p className="mb-4">
-                Please let me know if you have any questions.
-              </p>
-              <p>
-                Best,
-                <br />
-                Support
-                <br />
-                Marvel
-              </p>
+              <p className="mb-4">{emailContent}</p>
             </SheetDescription>
           </SheetHeader>
         </SheetContent>
