@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import { LogOut } from "lucide-react";
@@ -19,6 +19,7 @@ import ProtectedRoute from "@/components/protected-route";
 
 import useLogout from "@/hooks/useLogout";
 import useWindowSize from "@/hooks/useWindowSize";
+import useUserData from "@/hooks/useUserData";
 
 const EmailDashboard = () => {
   const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
@@ -26,10 +27,10 @@ const EmailDashboard = () => {
 
   const handleLogout = useLogout();
   const isMobile = useWindowSize();
+  const userData = useUserData();
 
   let storedApiKey;
   if (typeof window !== "undefined") {
-    // Code that uses localStorage can safely run here
     storedApiKey = localStorage.getItem("openAiApiKey");
   }
 
@@ -48,20 +49,21 @@ const EmailDashboard = () => {
     <ProtectedRoute>
       <div className="container max-w-4xl my-10 ">
         <div className="flex items-center justify-between mx-auto">
-          <div className="flex gap-4 items-center">
-            <Image
-              src={"https://avatar.iran.liara.run/public/27"}
-              alt="user-profile-picture"
-              width={60}
-              height={60}
-              className="border border-2 border-gray-300 p-0.5 rounded-full"
-            ></Image>
-
-            <div className="space-y-1 text-sm">
-              <p>Sanjay M</p>
-              <p>arjunsanjay0@gmail.com</p>
+          {userData && (
+            <div className="flex gap-4 items-center">
+              <Image
+                src={userData.picture}
+                alt="user-profile-picture"
+                width={60}
+                height={60}
+                className="border border-2 border-gray-300 p-0.5 rounded-full"
+              />
+              <div className="space-y-1 text-sm">
+                <p>{userData.name}</p>
+                <p>{userData.email}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           <Button
             onClick={handleLogout}
