@@ -5,14 +5,14 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 const Home = () => {
-  const [apiKey, setApiKey] = useState("");
+  const [openAiApiKey, setOpenAiApiKey] = useState("");
   const [inputError, setInputError] = useState(false);
 
   const handleGoogleBtnClick = () => {
-    if (apiKey.trim() === "") {
+    if (openAiApiKey.trim() === "") {
       setInputError(true);
-      return;
     } else {
+      localStorage.setItem("openAiApiKey", openAiApiKey.trim());
       setInputError(false);
       window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     }
@@ -31,8 +31,8 @@ const Home = () => {
             }`}
             type="text"
             placeholder="Enter your OpenAI API Key"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            value={openAiApiKey}
+            onChange={(e) => setOpenAiApiKey(e.target.value)}
           />
           {inputError && (
             <p className="text-xs mt-3 ml-1 text-red-600">

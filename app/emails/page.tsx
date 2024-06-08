@@ -27,6 +27,12 @@ const EmailDashboard = () => {
   const handleLogout = useLogout();
   const isMobile = useWindowSize();
 
+  let storedApiKey;
+  if (typeof window !== "undefined") {
+    // Code that uses localStorage can safely run here
+    storedApiKey = localStorage.getItem("openAiApiKey");
+  }
+
   const emailData = {
     senderName: "Lee Rob",
     emailLabel: "Important",
