@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -11,19 +12,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import EmailCard from "@/components/email-card";
 import EmailDrawer from "@/components/email-drawer";
 
-import { LogOut } from "lucide-react";
 import ProtectedRoute from "@/components/protected-route";
-import { useRouter } from "next/navigation";
+
+import useLogout from "@/hooks/useLogout";
 
 const EmailDashboard = () => {
   const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const router = useRouter();
+  const handleLogout = useLogout();
 
   const emailData = {
     senderName: "Lee Rob",
@@ -36,26 +36,6 @@ const EmailDashboard = () => {
     setIsDrawerOpen(true);
   };
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      const responseData = await response.json();
-      if (responseData.success) {
-        router.push("/");
-      } else {
-        console.error("Failed to logout");
-      }
-    } catch (error) {
-      console.error("An error occurred during logout", error);
-    }
-  };
   return (
     <ProtectedRoute>
       <div className="container max-w-4xl my-10 ">
