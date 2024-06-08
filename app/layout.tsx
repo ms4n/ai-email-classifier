@@ -3,8 +3,9 @@ import { Providers } from "@/redux/provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "nextjs-14 template",
-  description: "nextjs starter template with tailwind and redux",
+  title: "AI Email Classifier",
+  description:
+    "An application that classifies emails using LLMs for efficient email management.",
 };
 
 export default function RootLayout({

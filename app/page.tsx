@@ -14,7 +14,7 @@ const Home = () => {
       return;
     } else {
       setInputError(false);
-      //Google authentication logic goes here
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     }
   };
 
