@@ -18,12 +18,14 @@ import EmailDrawer from "@/components/email-drawer";
 import ProtectedRoute from "@/components/protected-route";
 
 import useLogout from "@/hooks/useLogout";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const EmailDashboard = () => {
   const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleLogout = useLogout();
+  const isMobile = useWindowSize();
 
   const emailData = {
     senderName: "Lee Rob",
@@ -57,19 +59,15 @@ const EmailDashboard = () => {
 
           <Button
             onClick={handleLogout}
-            className="hidden md:flex"
+            className={isMobile ? "flex md:hidden" : "hidden md:flex"}
             variant="outline"
           >
-            <LogOut className="mr-2 h-4 w-4" /> Logout
-          </Button>
-
-          <Button
-            onClick={handleLogout}
-            className="flex md:hidden "
-            variant="outline"
-            size="icon"
-          >
-            <LogOut className="h-4 w-4" />
+            {isMobile ? (
+              <LogOut className="h-4 w-4" />
+            ) : (
+              <LogOut className="mr-2 h-4 w-4" />
+            )}
+            {isMobile ? null : "Logout"}
           </Button>
         </div>
         <div className="flex item-center justify-between mt-10">

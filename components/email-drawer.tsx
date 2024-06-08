@@ -10,6 +10,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+import useWindowSize from "@/hooks/useWindowSize";
+
 interface EmailDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,20 +28,7 @@ const EmailDrawer: React.FC<EmailDrawerProps> = ({
   emailData,
 }) => {
   const { senderName, emailLabel, emailContent } = emailData;
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize(); // Set initial value
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const isMobile = useWindowSize();
 
   return (
     <div>
