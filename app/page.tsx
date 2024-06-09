@@ -1,12 +1,29 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import useAuth from "@/hooks/useAuth";
 
 const Home = () => {
   const [openAiApiKey, setOpenAiApiKey] = useState("");
   const [inputError, setInputError] = useState(false);
+
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      router.push("/emails");
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
+  }
 
   const handleGoogleBtnClick = () => {
     if (openAiApiKey.trim() === "") {

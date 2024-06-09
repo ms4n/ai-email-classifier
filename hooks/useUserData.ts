@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 
-interface User {
-  name: string;
-  email: string;
-  picture: string;
-}
+import { User } from "@/types";
 
 const useUserData = () => {
   const [userData, setUserData] = useState<User | null>(null);

@@ -14,34 +14,41 @@ import {
 } from "@/components/ui/select";
 import EmailCard from "@/components/email-card";
 import EmailDrawer from "@/components/email-drawer";
+import EmailSkeleton from "@/components/email-skeleton";
 
 import ProtectedRoute from "@/components/protected-route";
 
 import useLogout from "@/hooks/useLogout";
 import useWindowSize from "@/hooks/useWindowSize";
 import useUserData from "@/hooks/useUserData";
+import useEmailData from "@/hooks/useEmailData";
+
+import { Email, LabeledEmail } from "@/types";
 
 const EmailDashboard = () => {
-  const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const handleLogout = useLogout();
   const isMobile = useWindowSize();
   const userData = useUserData();
+  const [emailCount, setEmailCount] = useState(15);
+  const { emails, loading, error } = useEmailData(emailCount);
+
+  const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState<Email | LabeledEmail>({
+    emailFrom: "",
+    emailSnippet: "",
+    emailSubject: "",
+    emailBodyHtml: "",
+    emailLabel: "",
+  });
 
   let storedApiKey;
   if (typeof window !== "undefined") {
     storedApiKey = localStorage.getItem("openAiApiKey");
   }
 
-  const emailData = {
-    senderName: "Lee Rob",
-    emailLabel: "Important",
-    emailContent:
-      "Thanks for your order. We are pleased to inform you that your order has been shipped. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam auctor mattis tristique. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla malesuada tortor vitae justo condimentum auctor. Donec venenatis arcu vitae tellus finibus porta. Praesent volutpat mattis euismod. Donec elit lectus, vestibulum sed metus id, laoreet pharetra mi. Duis enim mauris, sollicitudin nec erat ac, aliquam viverra mi. Proin pretium maximus imperdiet. Thanks for your order. We are pleased inform you that your order has been shipped.",
-  };
-
-  const handleEmailCardClick = () => {
+  const handleEmailCardClick = (email: Email | LabeledEmail) => {
+    setSelectedEmail(email);
     setIsDrawerOpen(true);
   };
 
@@ -79,9 +86,9 @@ const EmailDashboard = () => {
           </Button>
         </div>
         <div className="flex item-center justify-between mt-10">
-          <Select>
+          <Select onValueChange={(value) => setEmailCount(Number(value))}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Number of emails" />
+              <SelectValue placeholder="Select email count" />
             </SelectTrigger>
             <SelectContent>
               {numberOfEmails.map((number) => (
@@ -96,13 +103,23 @@ const EmailDashboard = () => {
         </div>
 
         <div className="mt-10 flex flex-col gap-5 items-center justify-center">
-          <EmailCard emailData={emailData} onClick={handleEmailCardClick} />
+          {loading
+            ? Array.from({ length: emailCount }).map((_, index) => (
+                <EmailSkeleton key={index} />
+              ))
+            : emails.map((email, index) => (
+                <EmailCard
+                  key={index}
+                  onClick={() => handleEmailCardClick(email)}
+                  emailData={email}
+                />
+              ))}
         </div>
 
         <EmailDrawer
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
-          emailData={emailData}
+          emailData={selectedEmail}
         />
       </div>
     </ProtectedRoute>
