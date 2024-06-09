@@ -31,3 +31,7 @@ export function isLabeledEmail(
 ): email is LabeledEmail {
   return (email as LabeledEmail).emailLabel !== undefined;
 }
+
+export interface LabeledEmailResponse {
+  label: string;
+}

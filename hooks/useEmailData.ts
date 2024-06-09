@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { Email } from "@/types";
 
-const useEmailData = (emailCount = 15) => {
+const useEmailData = (emailCount: Number) => {
   const [emails, setEmails] = useState<Email[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const useEmailData = (emailCount = 15) => {
     fetchEmails();
   }, [emailCount]);
 
-  return { emails, loading, error };
+  return { emails, setEmails, loading, error };
 };
 
 export default useEmailData;

@@ -49,10 +49,6 @@ const EmailDrawer: React.FC<EmailDrawerProps> = ({
                     {emailLabel}
                   </p>
                 )}
-
-                <p className="px-2.5 py-0.5 mx-2 rounded-full text-white bg-green-500">
-                  Important
-                </p>
               </div>
             </SheetTitle>
             <div className="flex items-center justify-center">

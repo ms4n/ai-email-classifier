@@ -22,15 +22,18 @@ import useLogout from "@/hooks/useLogout";
 import useWindowSize from "@/hooks/useWindowSize";
 import useUserData from "@/hooks/useUserData";
 import useEmailData from "@/hooks/useEmailData";
+import useEmailClassification from "@/hooks/useEmailClassification";
 
-import { Email, LabeledEmail } from "@/types";
+import { Email, LabeledEmail, LabeledEmailResponse } from "@/types";
 
 const EmailDashboard = () => {
   const handleLogout = useLogout();
   const isMobile = useWindowSize();
   const userData = useUserData();
   const [emailCount, setEmailCount] = useState(15);
-  const { emails, loading, error } = useEmailData(emailCount);
+  const { emails, setEmails, loading } = useEmailData(emailCount);
+  const { classifyEmails, loading: classificationLoading } =
+    useEmailClassification();
 
   const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -41,6 +44,74 @@ const EmailDashboard = () => {
     emailBodyHtml: "",
     emailLabel: "",
   });
+
+  useEffect(() => {
+    loadEmailsFromLocalStorage();
+  }, [emailCount]);
+
+  const loadEmailsFromLocalStorage = () => {
+    const storedEmails = localStorage.getItem("emails");
+    if (storedEmails) {
+      const localEmails: Email[] = JSON.parse(storedEmails);
+      setEmails(localEmails);
+    }
+  };
+
+  const handleClassifyEmails = async () => {
+    try {
+      const emailData = getEmailDataFromLocalStorage();
+      const labeledEmails = await classifyEmails(emailData);
+      updateEmailsInLocalStorage(labeledEmails);
+      loadEmailsFromLocalStorage();
+    } catch (error) {
+      console.error("Error classifying emails:", error);
+    }
+  };
+
+  const getEmailDataFromLocalStorage = () => {
+    const storedEmails = localStorage.getItem("emails");
+    if (storedEmails) {
+      const emails: Email[] = JSON.parse(storedEmails);
+      return emails.map(({ emailSnippet, emailSubject }) => ({
+        emailSnippet,
+        emailSubject,
+      }));
+    }
+    return [];
+  };
+
+  const updateEmailsInLocalStorage = (
+    labeledEmails: LabeledEmailResponse[]
+  ) => {
+    const storedEmails = localStorage.getItem("emails");
+    if (storedEmails) {
+      const emails: Email[] = JSON.parse(storedEmails);
+
+      if (emails.length !== labeledEmails.length) {
+        console.error(
+          "Mismatched lengths:",
+          emails.length,
+          labeledEmails.length
+        );
+        return;
+      }
+
+      const updatedEmails = emails.map((email, index) => {
+        if (!labeledEmails[index]) {
+          console.error(`No labeled email at index ${index}`);
+          return email;
+        }
+
+        return {
+          ...email,
+          emailLabel: labeledEmails[index].label,
+        };
+      });
+
+      localStorage.setItem("emails", JSON.stringify(updatedEmails));
+      setEmails(updatedEmails);
+    }
+  };
 
   let storedApiKey;
   if (typeof window !== "undefined") {
@@ -86,7 +157,11 @@ const EmailDashboard = () => {
           </Button>
         </div>
         <div className="flex item-center justify-between mt-10">
-          <Select onValueChange={(value) => setEmailCount(Number(value))}>
+          <Select
+            value={String(emailCount)}
+            onValueChange={(value) => setEmailCount(Number(value))}
+            disabled={loading || classificationLoading}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select email count" />
             </SelectTrigger>
@@ -99,11 +174,17 @@ const EmailDashboard = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="secondary">Classify</Button>
+          <Button
+            disabled={loading || classificationLoading}
+            onClick={handleClassifyEmails}
+            variant="secondary"
+          >
+            Classify
+          </Button>
         </div>
 
         <div className="mt-10 flex flex-col gap-5 items-center justify-center">
-          {loading
+          {loading || classificationLoading
             ? Array.from({ length: emailCount }).map((_, index) => (
                 <EmailSkeleton key={index} />
               ))
