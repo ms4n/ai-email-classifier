@@ -9,9 +9,9 @@ An application that classifies emails using OpenAI's GPT LLM for efficient email
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://raw.githubusercontent.com/ms4n/ai-email-classifier/main/screenshots/screenshot-1.png)
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://raw.githubusercontent.com/ms4n/ai-email-classifier/main/screenshots/screenshot-2.png)
 ## Installation
 
 Setup the required backend from https://github.com/ms4n/ai-email-classifier-backend
