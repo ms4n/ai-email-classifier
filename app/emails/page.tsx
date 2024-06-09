@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import EmailCard from "@/components/email-card";
 import EmailDrawer from "@/components/email-drawer";
 import EmailSkeleton from "@/components/email-skeleton";
@@ -30,6 +31,7 @@ const EmailDashboard = () => {
   const handleLogout = useLogout();
   const isMobile = useWindowSize();
   const userData = useUserData();
+
   const [emailCount, setEmailCount] = useState(15);
   const { emails, setEmails, loading } = useEmailData(emailCount);
   const { classifyEmails, loading: classificationLoading } =
@@ -63,7 +65,8 @@ const EmailDashboard = () => {
       const labeledEmails = await classifyEmails(emailData);
       updateEmailsInLocalStorage(labeledEmails);
       loadEmailsFromLocalStorage();
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.message || "An unknown error occurred.";
       console.error("Error classifying emails:", error);
     }
   };

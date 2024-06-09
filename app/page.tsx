@@ -47,15 +47,20 @@ const Home = () => {
                 : ""
             }`}
             type="text"
-            placeholder="Enter your OpenAI API Key"
+            placeholder='Enter your OpenAI API Key or "gpt3"'
             value={openAiApiKey}
             onChange={(e) => setOpenAiApiKey(e.target.value)}
           />
+
           {inputError && (
             <p className="text-xs mt-3 ml-1 text-red-600">
               OpenAI API key is required!
             </p>
           )}
+          <p className="text-xs ml-1 mt-2">
+            To use gpt-3.5 for free, just enter{" "}
+            <span className="font-semibold">gpt3 </span>above
+          </p>
         </div>
 
         <Image

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LabeledEmailResponse } from "@/types";
+import { useToast } from "@/components/ui/use-toast";
 
 interface EmailClassificationResult {
   classifyEmails: (emailData: EmailData[]) => Promise<LabeledEmailResponse[]>;
@@ -16,12 +17,19 @@ const useEmailClassification = (): EmailClassificationResult => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { toast } = useToast();
+
   const classifyEmails = async (
     emailData: EmailData[]
   ): Promise<LabeledEmailResponse[]> => {
     try {
       setLoading(true);
       setError(null);
+
+      const storedApiKey = localStorage.getItem("openAiApiKey");
+      if (!storedApiKey) {
+        throw new Error("API key not found in localStorage");
+      }
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/classify-emails`,
@@ -30,14 +38,17 @@ const useEmailClassification = (): EmailClassificationResult => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ emails: emailData }),
+          body: JSON.stringify({
+            emails: emailData,
+            openAiApiKey: storedApiKey,
+          }),
         }
       );
 
       if (!response.ok) {
         const errorResponse = await response.json();
         console.error("Server error response:", errorResponse);
-        throw new Error("Failed to classify emails");
+        throw new Error(errorResponse.error || "Failed to classify emails");
       }
 
       const data = await response.json();
@@ -48,7 +59,12 @@ const useEmailClassification = (): EmailClassificationResult => {
 
       setLoading(false);
       return data.labeledEmails;
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: error.message,
+      });
       console.error("Error classifying emails:", error);
       setError("Failed to classify emails");
       setLoading(false);

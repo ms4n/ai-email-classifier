@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "AI Email Classifier",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-inter">{children}</body>
+      <body className="font-inter">
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
