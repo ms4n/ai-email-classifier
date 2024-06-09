@@ -35,6 +35,7 @@ const useEmailClassification = (): EmailClassificationResult => {
         `${process.env.NEXT_PUBLIC_API_URL}/classify-emails`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
