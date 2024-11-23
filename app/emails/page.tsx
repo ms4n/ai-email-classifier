@@ -37,7 +37,7 @@ const EmailDashboard = () => {
   const { classifyEmails, loading: classificationLoading } =
     useEmailClassification();
 
-  const numberOfEmails = Array.from({ length: 5 }, (_, i) => i + 1);
+  const numberOfEmails = Array.from({ length: 20 }, (_, i) => i + 1);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<Email | LabeledEmail>({
     emailFrom: "",
