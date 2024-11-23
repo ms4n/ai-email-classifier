@@ -26,11 +26,6 @@ const useEmailClassification = (): EmailClassificationResult => {
       setLoading(true);
       setError(null);
 
-      const storedApiKey = localStorage.getItem("openAiApiKey");
-      if (!storedApiKey) {
-        throw new Error("API key not found in localStorage");
-      }
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/classify-emails`,
         {
@@ -41,7 +36,6 @@ const useEmailClassification = (): EmailClassificationResult => {
           },
           body: JSON.stringify({
             emails: emailData,
-            openAiApiKey: storedApiKey,
           }),
         }
       );

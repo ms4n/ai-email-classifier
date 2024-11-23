@@ -46,6 +46,7 @@ const EmailDashboard = () => {
     emailBodyHtml: "",
     emailLabel: "",
   });
+  const [activeCategory, setActiveCategory] = useState<string>("all");
 
   useEffect(() => {
     loadEmailsFromLocalStorage();
@@ -116,14 +117,26 @@ const EmailDashboard = () => {
     }
   };
 
-  let storedApiKey;
-  if (typeof window !== "undefined") {
-    storedApiKey = localStorage.getItem("openAiApiKey");
-  }
-
   const handleEmailCardClick = (email: Email | LabeledEmail) => {
     setSelectedEmail(email);
     setIsDrawerOpen(true);
+  };
+
+  const getCategoryStats = () => {
+    const stats = emails.reduce((acc: { [key: string]: number }, email) => {
+      const label = (email as LabeledEmail).emailLabel || "unlabeled";
+      acc[label] = (acc[label] || 0) + 1;
+      return acc;
+    }, {});
+    
+    return { ...stats, all: emails.length };
+  };
+
+  const getFilteredEmails = () => {
+    if (activeCategory === "all") return emails;
+    return emails.filter((email) => 
+      (email as LabeledEmail).emailLabel === activeCategory
+    );
   };
 
   return (
@@ -186,12 +199,25 @@ const EmailDashboard = () => {
           </Button>
         </div>
 
+        <div className="mt-10 flex flex-wrap gap-2">
+          {Object.entries(getCategoryStats()).map(([category, count]) => (
+            <Button
+              key={category}
+              variant={activeCategory === category ? "secondary" : "outline"}
+              onClick={() => setActiveCategory(category)}
+              className="capitalize"
+            >
+              {category} ({count})
+            </Button>
+          ))}
+        </div>
+
         <div className="mt-10 flex flex-col gap-5 items-center justify-center">
           {loading || classificationLoading
             ? Array.from({ length: emailCount }).map((_, index) => (
                 <EmailSkeleton key={index} />
               ))
-            : emails.map((email, index) => (
+            : getFilteredEmails().map((email, index) => (
                 <EmailCard
                   key={index}
                   onClick={() => handleEmailCardClick(email)}

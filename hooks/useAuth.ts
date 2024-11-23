@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -20,17 +21,21 @@ const useAuth = () => {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          router.push("/"); // Redirect to home page if not authenticated
+          if (pathname !== "/") {
+            router.push("/");
+          }
         }
       } catch (error) {
         setIsAuthenticated(false);
-        router.push("/"); // Redirect to home page if error occurs
+        if (pathname !== "/") {
+          router.push("/");
+        }
       } finally {
         setLoading(false);
       }
     };
     checkAuth();
-  }, [router]);
+  }, [router, pathname]);
 
   return { isAuthenticated, loading };
 };
