@@ -32,12 +32,12 @@ const EmailDashboard = () => {
   const isMobile = useWindowSize();
   const userData = useUserData();
 
-  const [emailCount, setEmailCount] = useState(15);
+  const [emailCount, setEmailCount] = useState(5);
   const { emails, setEmails, loading } = useEmailData(emailCount);
   const { classifyEmails, loading: classificationLoading } =
     useEmailClassification();
 
-  const numberOfEmails = Array.from({ length: 15 }, (_, i) => i + 1);
+  const numberOfEmails = Array.from({ length: 5 }, (_, i) => i + 1);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState<Email | LabeledEmail>({
     emailFrom: "",
